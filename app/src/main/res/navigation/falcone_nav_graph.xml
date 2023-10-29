@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/falcone_nav_graph"
+    app:startDestination="@id/falconeSelectionFragment">
+
+    <fragment
+        android:id="@+id/falconeSelectionFragment"
+        android:name="com.example.falcone_finder.framework.presentation.falcone_selection.FalconeSelectionFragment"
+        android:label="fragment_falcone_selection"
+        tools:layout="@layout/fragment_falcone_selection" >
+        <action
+            android:id="@+id/action_falconeSelectionFragment_to_falconeFinderFragment"
+            app:destination="@id/falconeFinderFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/falconeFinderFragment"
+        android:name="com.example.falcone_finder.framework.presentation.falcone_finder.FalconeFinderFragment"
+        android:label="fragment_falcone_finder"
+        tools:layout="@layout/fragment_falcone_finder" >
+
+        <argument
+            android:name="falconeFindingData"
+            app:argType="com.example.falcone_finder.business.domain.models.FalconeFindingData"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_falconeFinderFragment_to_falconeSelectionFragment"
+            app:destination="@id/falconeSelectionFragment"
+            app:popUpTo="@+id/falconeSelectionFragment"
+            app:popUpToInclusive="true"
+          />
+    </fragment>
+</navigation>

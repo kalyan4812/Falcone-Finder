@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Falcone-Finder</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="princes_found_on">Congratulations! Princes found on %s</string>
+    <string name="princes_not_found">404! Princes not found</string>
+</resources>
