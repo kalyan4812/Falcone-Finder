@@ -1,22 +1,17 @@
 package com.example.falcone_finder.framework.presentation.falcone_finder
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.falcone_finder.R
 import com.example.falcone_finder.business.domain.models.FindResponse
 import com.example.falcone_finder.databinding.FragmentFalconeFinderBinding
-import com.saikalyandaroju.kotlinnews.utils.baseclasses.BaseFragment
+import com.example.falcone_finder.framework.utils.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

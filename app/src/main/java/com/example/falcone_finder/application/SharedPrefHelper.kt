@@ -1,4 +1,4 @@
-package com.example.falcone_finder
+package com.example.falcone_finder.application
 
 import android.content.SharedPreferences
 import javax.inject.Inject

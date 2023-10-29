@@ -1,15 +1,13 @@
-package com.saikalyandaroju.kotlinnews.utils.baseclasses
+package com.example.falcone_finder.framework.utils
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import com.example.falcone_finder.framework.presentation.falcone_selection.FalconeSelectionViewModel
 import java.lang.reflect.ParameterizedType
 
 

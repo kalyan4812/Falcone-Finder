@@ -1,20 +1,17 @@
 package com.example.falcone_finder.framework.presentation.falcone_selection
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.request.RequestOptions
 import com.example.falcone_finder.R
 import com.example.falcone_finder.databinding.FragmentFalconeSelectionBinding
 import com.example.falcone_finder.framework.utils.collectLifecycleAwareChannelFlow
-import com.saikalyandaroju.kotlinnews.utils.baseclasses.BaseFragment
+import com.example.falcone_finder.framework.utils.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

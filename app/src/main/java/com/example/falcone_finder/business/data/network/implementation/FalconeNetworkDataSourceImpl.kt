@@ -1,6 +1,6 @@
 package com.example.falcone_finder.business.data.network.implementation
 
-import com.example.falcone_finder.SharedPrefHelper
+import com.example.falcone_finder.application.SharedPrefHelper
 import com.example.falcone_finder.business.data.model.PlanetsApiResponse
 import com.example.falcone_finder.business.data.network.abstraction.FalconeNetworkDataSource
 import com.example.falcone_finder.business.data.utils.safeApiCall
