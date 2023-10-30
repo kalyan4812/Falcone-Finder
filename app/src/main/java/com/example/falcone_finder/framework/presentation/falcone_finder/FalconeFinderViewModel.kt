@@ -7,13 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.falcone_finder.business.data.network.implementation.FalconeNetworkDataSourceImpl
 import com.example.falcone_finder.business.domain.models.FalconeFindingData
 import com.example.falcone_finder.business.domain.models.FindResponse
+import com.example.falcone_finder.business.usecases.falcone_finding.FindPrincessUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FalconeFinderViewModel @Inject constructor(
-    private val networkDataSourceImpl: FalconeNetworkDataSourceImpl,
+    private val findPrincessUseCase: FindPrincessUseCase,
     private val savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
@@ -30,13 +31,8 @@ class FalconeFinderViewModel @Inject constructor(
         val data: FalconeFindingData? = savedStateHandle["falconeFindingData"]
         data?.let {
             viewModelScope.launch {
-                networkDataSourceImpl.findPrincess(
-                    it.planetNames, it.vehicleNames
-                ).onSuccess { response ->
+                findPrincessUseCase.invoke(it.planetNames, it.vehicleNames).onSuccess { response ->
                     _statusData.postValue(response)
-
-                }.onFailure {
-                    println("dcba final stage data4 : " + it.localizedMessage)
                 }
             }
         }

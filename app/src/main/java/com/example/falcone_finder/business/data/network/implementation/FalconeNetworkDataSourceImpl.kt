@@ -39,7 +39,7 @@ class FalconeNetworkDataSourceImpl @Inject constructor(
     override suspend fun findPrincess(
         planets: List<String>?,
         vehicles: List<String>?
-    ): Result<FindResponse> {
+    ): Result<FindApiResponse> {
         return safeApiCall {
             falconeApiService.findPrincess(
                 FindApiRequest(
@@ -47,15 +47,9 @@ class FalconeNetworkDataSourceImpl @Inject constructor(
                     planets,
                     vehicles
                 )
-            ).mapToFindResponse()
+            )
         }
     }
 
 }
 
-fun FindApiResponse.mapToFindResponse() =
-    when (status) {
-        "success" -> FindResponse.Success(planetName!!)
-        "false" -> FindResponse.Failure
-        else -> throw SecurityException(error)
-    }

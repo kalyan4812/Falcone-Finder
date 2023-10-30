@@ -21,5 +21,5 @@ interface FalconeNetworkDataSource {
     suspend fun getVehicles(): Result<List<VehiclesApiResponse>>
 
 
-    suspend fun findPrincess(planets: List<String>?, vehicles: List<String>?): Result<FindResponse>
+    suspend fun findPrincess(planets: List<String>?, vehicles: List<String>?): Result<FindApiResponse>
 }

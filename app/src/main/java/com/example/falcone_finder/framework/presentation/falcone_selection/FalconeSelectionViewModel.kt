@@ -4,11 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.falcone_finder.business.data.model.PlanetsApiResponse
-import com.example.falcone_finder.business.data.network.implementation.FalconeNetworkDataSourceImpl
-import com.example.falcone_finder.business.domain.model.FindApiRequest
 import com.example.falcone_finder.business.domain.model.VehiclesApiResponse
 import com.example.falcone_finder.business.domain.models.FalconeFindingData
 import com.example.falcone_finder.business.domain.models.FalconeSelectionState
+import com.example.falcone_finder.business.usecases.falcone_selection.FalconeDestinationStackUseCase
+import com.example.falcone_finder.business.usecases.falcone_selection.FalconeSelectionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -18,7 +18,9 @@ import java.util.Stack
 import javax.inject.Inject
 
 @HiltViewModel
-class FalconeSelectionViewModel @Inject constructor(private val falconeNetworkDataSourceImpl: FalconeNetworkDataSourceImpl) :
+class FalconeSelectionViewModel @Inject constructor(
+    private val falconeSelectionUseCases: FalconeSelectionUseCases
+) :
     ViewModel() {
 
 
@@ -27,11 +29,11 @@ class FalconeSelectionViewModel @Inject constructor(private val falconeNetworkDa
     private val _vehiclesData: MutableLiveData<List<VehiclesApiResponse>> = MutableLiveData()
     val vehiclesData = _vehiclesData
 
-    private val _selectionData: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
+    private val _selectionData: MutableLiveData<Triple<Int, Int, Int>> = MutableLiveData()
     val selectionData = _selectionData
 
-    private val _uievents = Channel<FalconeScreenUIEvent>()
-    val ui_events = _uievents.receiveAsFlow()
+    private val _uiEvents = Channel<FalconeScreenUIEvent>()
+    val uiEvents = _uiEvents.receiveAsFlow()
 
     private var currentPlanetIndex: Int = 0
     private var currentVehicleIndex: Int = 0
@@ -46,21 +48,26 @@ class FalconeSelectionViewModel @Inject constructor(private val falconeNetworkDa
         sendUiEvent(FalconeScreenUIEvent.refreshUI(1, null))
     }
 
-    fun populatePlanetAndVehicleIndexs() {
-        _selectionData.postValue(Pair(currentPlanetIndex, currentVehicleIndex))
-    }
 
     fun onEventRecieved(event: FalconeSelectionScreenEvent) {
         when (event) {
             is FalconeSelectionScreenEvent.onNext -> {
-                pushSelection()
-                if (selectionStack.size == 4) {
-                    sendUiEvent(FalconeScreenUIEvent.navigateToFindPrincess(getFindRequestFromStack()))
-                    selectionStack.clear()
+                falconeSelectionUseCases.destinationStackUseCase.pushSelection(
+                    currentPlanetIndex,
+                    currentPlanetSelection,
+                    currentVehicleIndex,
+                    currentVehicleSelection
+                )
+                if (falconeSelectionUseCases.destinationStackUseCase.isMaxLimitReached()) {
+                    sendUiEvent(FalconeScreenUIEvent.navigateToFindPrincess(falconeSelectionUseCases.destinationStackUseCase.getFindRequestFromStack()))
+                    falconeSelectionUseCases.destinationStackUseCase.clearStack()
                 } else {
                     sendUiEvent(
                         FalconeScreenUIEvent.refreshUI(
-                            selectionStack.size + 1, null, selectionStack.size == 3
+                            falconeSelectionUseCases.destinationStackUseCase.currentSize() + 1,
+                            null,
+                            falconeSelectionUseCases.destinationStackUseCase.currentSize() ==
+                                    falconeSelectionUseCases.destinationStackUseCase.maxPlanets() - 1
                         )
                     )
                 }
@@ -72,18 +79,25 @@ class FalconeSelectionViewModel @Inject constructor(private val falconeNetworkDa
             }
 
             FalconeSelectionScreenEvent.onPrev -> {
-                sendUiEvent(FalconeScreenUIEvent.prevConfirmDialog(selectionStack.size))
+                sendUiEvent(
+                    FalconeScreenUIEvent.prevConfirmDialog(
+                        falconeSelectionUseCases.destinationStackUseCase.currentSize()
+                    )
+                )
             }
 
             FalconeSelectionScreenEvent.onPrevConfirm -> {
-                if (selectionStack.isEmpty()) return
+                if (falconeSelectionUseCases.destinationStackUseCase.currentSize() == 0) return
                 sendUiEvent(
                     FalconeScreenUIEvent.refreshUI(
-                        selectionStack.size,
-                        Pair(peekSelection().planetIndex, peekSelection().vehicleIndex)
+                        falconeSelectionUseCases.destinationStackUseCase.currentSize(),
+                        Pair(
+                            falconeSelectionUseCases.destinationStackUseCase.peekSelection().planetIndex,
+                            falconeSelectionUseCases.destinationStackUseCase.peekSelection().vehicleIndex
+                        )
                     )
                 )
-                popSelection()
+                falconeSelectionUseCases.destinationStackUseCase.popSelection()
             }
 
             is FalconeSelectionScreenEvent.onVehicleSelection -> {
@@ -93,65 +107,44 @@ class FalconeSelectionViewModel @Inject constructor(private val falconeNetworkDa
         }
     }
 
-    private fun initToken() {
-        viewModelScope.launch(Dispatchers.IO) {
-            falconeNetworkDataSourceImpl.getToken()
+    private fun sendUiEvent(event: FalconeScreenUIEvent) {
+        viewModelScope.launch {
+            _uiEvents.send(event)
         }
     }
 
-    fun getPlanetsData() {
+    private fun initToken() {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = falconeNetworkDataSourceImpl.getPlanets()
+            falconeSelectionUseCases.fetchTokenUseCase.invoke()
+        }
+    }
+
+    private fun getPlanetsData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = falconeSelectionUseCases.fetchPlanetsUseCase.invoke()
             data.onSuccess {
                 _planetsData.postValue(it)
             }
         }
     }
 
-    fun getVehiclesData() {
+    private fun getVehiclesData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = falconeNetworkDataSourceImpl.getVehicles()
+            val data = falconeSelectionUseCases.fetchVehiclesUseCase.invoke()
             data.onSuccess {
                 _vehiclesData.postValue(it)
             }
         }
     }
 
-
-    private fun sendUiEvent(event: FalconeScreenUIEvent) {
-        viewModelScope.launch {
-            _uievents.send(event)
-        }
-    }
-
-    private val selectionStack = Stack<FalconeSelectionState>()
-
-    private fun pushSelection() {
-        selectionStack.push(
-            FalconeSelectionState(
-                currentPlanetIndex, currentPlanetSelection,
-                currentVehicleIndex, currentVehicleSelection
+    fun populatePlanetAndVehicleIndexs() {
+        _selectionData.postValue(
+            Triple(
+                currentPlanetIndex,
+                currentVehicleIndex,
+                falconeSelectionUseCases.destinationStackUseCase.currentSize() + 1
             )
         )
     }
 
-    private fun popSelection() {
-        if (selectionStack.isNotEmpty()) {
-            selectionStack.pop()
-        }
-    }
-
-    private fun peekSelection(): FalconeSelectionState {
-        if (selectionStack.isNotEmpty()) {
-            return selectionStack.peek()
-        }
-        return FalconeSelectionState()
-    }
-
-
-    private fun getFindRequestFromStack(): FalconeFindingData {
-        return FalconeFindingData(
-            selectionStack.map { it.planetName ?: "" },
-            selectionStack.map { it.vehicleName ?: "" })
-    }
 }

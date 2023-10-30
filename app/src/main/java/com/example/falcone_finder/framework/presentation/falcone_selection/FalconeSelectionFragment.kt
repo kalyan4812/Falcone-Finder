@@ -21,9 +21,9 @@ class FalconeSelectionFragment :
 
     @Inject
     lateinit var requestManager: RequestManager
-    override fun getViewBinding(): FragmentFalconeSelectionBinding {
-        return FragmentFalconeSelectionBinding.inflate(layoutInflater)
-    }
+    override fun getViewBinding(): FragmentFalconeSelectionBinding =
+        FragmentFalconeSelectionBinding.inflate(layoutInflater)
+
 
     override fun setUpWork() {
         super.setUpWork()
@@ -36,12 +36,11 @@ class FalconeSelectionFragment :
         respondToUiEvents()
     }
 
-    private fun fetchPlanetAndVehicleSelection() {
-        viewModel.populatePlanetAndVehicleIndexs()
-    }
+    private fun fetchPlanetAndVehicleSelection() = viewModel.populatePlanetAndVehicleIndexs()
+
 
     private fun respondToUiEvents() {
-        collectLifecycleAwareChannelFlow(viewModel.ui_events) { event ->
+        collectLifecycleAwareChannelFlow(viewModel.uiEvents) { event ->
             when (event) {
                 is FalconeScreenUIEvent.navigateToFindPrincess -> {
                     val bundle = Bundle()
@@ -75,15 +74,6 @@ class FalconeSelectionFragment :
                         "Destination Planet ${event.indexOfSelection}  : "
                 }
             }
-
-        }
-    }
-
-    private fun resetPlanetSpinnerAndVehicleGroup(spinnerPosition: Int, radioGroupPosition: Int) {
-        binding.planetSpinner.setSelection(spinnerPosition)
-        if (binding.vehicleGroup.childCount > radioGroupPosition) {
-            binding.vehicleGroup.check(binding.vehicleGroup.getChildAt(radioGroupPosition).id)
-            binding.vehicleGroup.jumpDrawablesToCurrentState()
         }
     }
 
@@ -103,14 +93,17 @@ class FalconeSelectionFragment :
         viewModel.vehiclesData.observe(viewLifecycleOwner) { response ->
             setRadioGroupChangeListener(response.map { it.name })
         }
-        viewModel.selectionData.observe(viewLifecycleOwner) { pair ->
-            val (spinnerIndex, radioGroupIndex) = pair
+        viewModel.selectionData.observe(viewLifecycleOwner) { triple ->
+            val (spinnerIndex, radioGroupIndex,destinationIndex) = triple
             resetPlanetSpinnerAndVehicleGroup(spinnerIndex, radioGroupIndex)
             loadImage(spinnerIndex + 1, radioGroupIndex + 1)
+            binding.planetHeading.text =
+                "Destination Planet ${destinationIndex}  : "
         }
     }
 
 
+    // setup spinner and radio buttons.
     private fun setUpSpinnerView(spinnerData: List<String>) {
         val adapter = ArrayAdapter(
             requireContext(),
@@ -137,7 +130,7 @@ class FalconeSelectionFragment :
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
-                // This method is called when no item is selected. You can handle it if needed.
+
             }
         }
     }
@@ -173,7 +166,15 @@ class FalconeSelectionFragment :
         }
     }
 
+    private fun resetPlanetSpinnerAndVehicleGroup(spinnerPosition: Int, radioGroupPosition: Int) {
+        binding.planetSpinner.setSelection(spinnerPosition)
+        if (binding.vehicleGroup.childCount > radioGroupPosition) {
+            binding.vehicleGroup.check(binding.vehicleGroup.getChildAt(radioGroupPosition).id)
+            binding.vehicleGroup.jumpDrawablesToCurrentState()
+        }
+    }
 
+    // image loading  helpers.
     private fun loadImage(planetIndex: Int, vehicleIndex: Int) {
         reloadPlanetImage(planetIndex)
         reloadVehicleImage(vehicleIndex)
