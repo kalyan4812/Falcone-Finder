@@ -121,20 +121,34 @@ class FalconeSelectionViewModel @Inject constructor(
 
     private fun getPlanetsData() {
         viewModelScope.launch(Dispatchers.IO) {
+            sendUILoaderEvent(true)
             val data = falconeSelectionUseCases.fetchPlanetsUseCase.invoke()
             data.onSuccess {
+                sendUILoaderEvent()
                 _planetsData.postValue(it)
+            }.onFailure {
+                sendUILoaderEvent()
+                sendUiEvent(FalconeScreenUIEvent.showTost(it.localizedMessage ?: ""))
             }
         }
     }
 
     private fun getVehiclesData() {
         viewModelScope.launch(Dispatchers.IO) {
+            sendUILoaderEvent(true)
             val data = falconeSelectionUseCases.fetchVehiclesUseCase.invoke()
             data.onSuccess {
+                sendUILoaderEvent()
                 _vehiclesData.postValue(it)
+            }.onFailure {
+                sendUILoaderEvent()
+                sendUiEvent(FalconeScreenUIEvent.showTost(it.localizedMessage ?: ""))
             }
         }
+    }
+
+    private fun sendUILoaderEvent(show: Boolean = false) {
+        sendUiEvent(FalconeScreenUIEvent.progressBarStatus(show))
     }
 
     fun populatePlanetAndVehicleIndexs() {

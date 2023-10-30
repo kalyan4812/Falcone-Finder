@@ -9,6 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.example.falcone_finder.business.data.network.implementation.FalconeNetworkDataSourceImpl
 import com.example.falcone_finder.framework.datasource.remote.FalconeApiService
+import com.example.falcone_finder.framework.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,20 +42,11 @@ class AppModule {
         return Glide.with(application).setDefaultRequestOptions(requestOptions)
     }
 
-    @Singleton
-    @Provides
-    @Named("sharedPref")
-    fun provideSharedPrefFileName(): String {
-        return "FalconeAppPref"
-    }
 
     @Singleton
     @Provides
-    fun getPreference(
-        @Named("sharedPref") sharedPrefDbKey: String,
-        @ApplicationContext context: Context
-    ): SharedPreferences {
-        return context.getSharedPreferences(sharedPrefDbKey, Context.MODE_PRIVATE)
+    fun getFalconePreference(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(Constants.FalconeAppPref, Context.MODE_PRIVATE)
     }
 
     @Singleton

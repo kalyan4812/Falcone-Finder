@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.util.Log
 import com.example.falcone_finder.di.qualifiers.OnlineInterceptor
+import com.example.falcone_finder.framework.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -145,11 +146,10 @@ class NetworkModule {
     fun getRetrofitInstance(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BASE_URL).build()
+            .baseUrl(Constants.BASE_URL).build()
     }
 
     companion object {
-        const val BASE_URL: String = "https://findfalcone.geektrust.com"
         const val PRAGMA_HEADER =
             "Pragma" // it is a header ,attached to http request ,it may not allow request
 

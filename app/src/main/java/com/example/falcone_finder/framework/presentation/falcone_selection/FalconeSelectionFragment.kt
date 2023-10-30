@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
@@ -21,6 +22,8 @@ class FalconeSelectionFragment :
 
     @Inject
     lateinit var requestManager: RequestManager
+
+
     override fun getViewBinding(): FragmentFalconeSelectionBinding =
         FragmentFalconeSelectionBinding.inflate(layoutInflater)
 
@@ -35,6 +38,7 @@ class FalconeSelectionFragment :
         setUpClickListeners()
         respondToUiEvents()
     }
+
 
     private fun fetchPlanetAndVehicleSelection() = viewModel.populatePlanetAndVehicleIndexs()
 
@@ -72,6 +76,15 @@ class FalconeSelectionFragment :
                     binding.forwardButton.text = if (event.isFinalStage) "Find Falcone!" else "Next"
                     binding.planetHeading.text =
                         "Destination Planet ${event.indexOfSelection}  : "
+                }
+
+                is FalconeScreenUIEvent.progressBarStatus -> {
+                    binding.progressBar.isVisible = event.show
+                }
+
+                is FalconeScreenUIEvent.showTost -> {
+                    Toast.makeText(context, event.content, Toast.LENGTH_SHORT).show()
+                    binding.forwardButton.isVisible = false
                 }
             }
         }
