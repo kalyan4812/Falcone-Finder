@@ -10,7 +10,6 @@
 * On the final stage ,user can click on find falcone to check the response ,which is shown in next page.
 
  <table>
-        
        <tr>
         <td><img src = "https://github.com/kalyan4812/Falcone-Finder/assets/68738102/e929f7eb-d9f0-4086-aab0-6a87d2f77e3e" ></td>
           <td><img src = "https://github.com/kalyan4812/Falcone-Finder/assets/68738102/bff26c1f-adfa-47cc-937a-b12e59473933" ></td>
