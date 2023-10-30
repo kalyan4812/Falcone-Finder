@@ -16,6 +16,7 @@ import com.example.falcone_finder.databinding.FragmentFalconeFinderBinding
 import com.example.falcone_finder.databinding.FragmentFalconeSelectionBinding
 import com.example.falcone_finder.framework.utils.collectLifecycleAwareChannelFlow
 import com.example.falcone_finder.framework.utils.BaseFragment
+import com.example.falcone_finder.framework.utils.Constants
 import com.example.falcone_finder.framework.utils.autoCleared
 import com.example.falcone_finder.framework.utils.collectLifecycleAwareFlow
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,7 +55,7 @@ class FalconeSelectionFragment :
                 is FalconeScreenUIEvent.navigateToFindPrincess -> {
                     val bundle = Bundle()
                     bundle.apply {
-                        putParcelable("falconeFindingData", event.data)
+                        putParcelable(Constants.FalconeFindingData, event.data)
 
                     }
                     findNavController().navigate(
@@ -78,9 +79,12 @@ class FalconeSelectionFragment :
                     }
                     binding.prevButton.isVisible =
                         ((event.indexOfSelection <= 1)).not()
-                    binding.forwardButton.text = if (event.isFinalStage) "Find Falcone!" else "Next"
+                    binding.forwardButton.text =
+                        if (event.isFinalStage) getString(R.string.find_falcone) else getString(
+                            R.string.next
+                        )
                     binding.planetHeading.text =
-                        "Destination Planet ${event.indexOfSelection}  : "
+                        getString(R.string.destination_planet, event.indexOfSelection.toString())
                 }
 
                 is FalconeScreenUIEvent.progressBarStatus -> {
@@ -123,7 +127,8 @@ class FalconeSelectionFragment :
                 binding.group.isVisible = true
                 binding.prevButton.isVisible = false
                 binding.forwardButton.isVisible = false
-                binding.errorPlaceholderStub.isVisible=false
+                binding.progressBar.isVisible = false
+                binding.errorPlaceholderStub.isVisible = false
             }
         }
         viewModel.selectionData.observe(viewLifecycleOwner) { triple ->
@@ -131,7 +136,7 @@ class FalconeSelectionFragment :
             resetPlanetSpinnerAndVehicleGroup(spinnerIndex, radioGroupIndex)
             loadImage(spinnerIndex + 1, radioGroupIndex + 1)
             binding.planetHeading.text =
-                "Destination Planet ${destinationIndex}  : "
+                getString(R.string.destination_planet, destinationIndex.toString())
         }
     }
 

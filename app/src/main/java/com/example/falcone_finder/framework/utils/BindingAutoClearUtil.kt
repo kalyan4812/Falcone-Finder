@@ -7,23 +7,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 
-class AutoClearedValue<T : Any> : ReadWriteProperty<Fragment, T> {
-    val fragment: Fragment
-
-    constructor(fragment: Fragment) {
-        this.fragment = fragment
-        fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onCreate(owner: LifecycleOwner) {
-                fragment.viewLifecycleOwnerLiveData.observe(fragment) { viewLifecycleOwner ->
-                    viewLifecycleOwner?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
-                        override fun onDestroy(owner: LifecycleOwner) {
-                            _value = null
-                        }
-                    })
-                }
-            }
-        })
-    }
+class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
 
     private var _value: T? = null
 
@@ -36,9 +20,21 @@ class AutoClearedValue<T : Any> : ReadWriteProperty<Fragment, T> {
     override fun setValue(thisRef: Fragment, property: KProperty<*>, value: T) {
         _value = value
     }
+
+    init {
+        fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onCreate(owner: LifecycleOwner) {
+                fragment.viewLifecycleOwnerLiveData.observe(fragment) { viewLifecycleOwner ->
+                    viewLifecycleOwner?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
+                        override fun onDestroy(owner: LifecycleOwner) {
+                            _value = null
+                        }
+                    })
+                }
+            }
+        })
+    }
 }
 
-/**
- * Creates an [AutoClearedValue] associated with this fragment.
- */
+
 fun <T : Any> Fragment.autoCleared() = AutoClearedValue<T>(this)

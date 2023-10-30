@@ -12,6 +12,7 @@ import com.example.falcone_finder.R
 import com.example.falcone_finder.business.domain.models.FindResponse
 import com.example.falcone_finder.databinding.FragmentFalconeFinderBinding
 import com.example.falcone_finder.framework.utils.BaseFragment
+import com.example.falcone_finder.framework.utils.setupOnBackPressedCallback
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -69,10 +70,3 @@ class FalconeFinderFragment : BaseFragment<FalconeFinderViewModel, FragmentFalco
     }
 }
 
-fun Fragment.setupOnBackPressedCallback(block: () -> Unit) {
-    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = block.invoke()
-        }
-    )
-}

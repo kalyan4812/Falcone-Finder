@@ -8,6 +8,7 @@ import com.example.falcone_finder.business.data.network.implementation.FalconeNe
 import com.example.falcone_finder.business.domain.models.FalconeFindingData
 import com.example.falcone_finder.business.domain.models.FindResponse
 import com.example.falcone_finder.business.usecases.falcone_finding.FindPrincessUseCase
+import com.example.falcone_finder.framework.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +29,7 @@ class FalconeFinderViewModel @Inject constructor(
     }
 
     private fun makeFindFalconeApiCall() {
-        val data: FalconeFindingData? = savedStateHandle["falconeFindingData"]
+        val data: FalconeFindingData? = savedStateHandle[Constants.FalconeFindingData]
         data?.let {
             viewModelScope.launch {
                 findPrincessUseCase.invoke(it.planetNames, it.vehicleNames).onSuccess { response ->

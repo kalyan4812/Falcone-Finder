@@ -4,4 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="princes_found_on">Congratulations! Princes found on %s</string>
     <string name="princes_not_found">404! Princes not found</string>
+    <string name="find_falcone">Find Falcone!</string>
+    <string name="next">Next</string>
+    <string name="destination_planet">"Destination Planet %1$s  : "</string>
 </resources>
