@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".framework.presentation.falcone_finder.FalconeFinderFragment">
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="vehicleGroup
+,vehicleHeading,vehicleImage,planetHeading,planetImage,planetSpinner
+" />
 
     <TextView
         android:id="@+id/heading"
@@ -122,9 +130,21 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
         android:text="Previous"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/forwardButton"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ViewStub
+        android:id="@+id/errorPlaceholderStub"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout="@layout/error_placeholder_layout"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/heading" />
 
     <Button
         android:id="@+id/forwardButton"
@@ -135,6 +155,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
         android:text="Next"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/prevButton" />

@@ -7,11 +7,16 @@ import com.example.falcone_finder.business.data.model.PlanetsApiResponse
 import com.example.falcone_finder.business.domain.model.VehiclesApiResponse
 import com.example.falcone_finder.business.domain.models.FalconeFindingData
 import com.example.falcone_finder.business.domain.models.FalconeSelectionState
+import com.example.falcone_finder.business.domain.utils.TokenStatus
 import com.example.falcone_finder.business.usecases.falcone_selection.FalconeDestinationStackUseCase
 import com.example.falcone_finder.business.usecases.falcone_selection.FalconeSelectionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Stack
@@ -32,6 +37,9 @@ class FalconeSelectionViewModel @Inject constructor(
     private val _selectionData: MutableLiveData<Triple<Int, Int, Int>> = MutableLiveData()
     val selectionData = _selectionData
 
+    private val _tokenStatus= MutableStateFlow(TokenStatus.TOKEN_FETCH_FAILED)
+    val tokenStatus = _tokenStatus.asStateFlow()
+
     private val _uiEvents = Channel<FalconeScreenUIEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
@@ -43,8 +51,6 @@ class FalconeSelectionViewModel @Inject constructor(
 
     init {
         initToken()
-        getPlanetsData()
-        getVehiclesData()
         sendUiEvent(FalconeScreenUIEvent.refreshUI(1, null))
     }
 
@@ -115,7 +121,14 @@ class FalconeSelectionViewModel @Inject constructor(
 
     private fun initToken() {
         viewModelScope.launch(Dispatchers.IO) {
-            falconeSelectionUseCases.fetchTokenUseCase.invoke()
+            falconeSelectionUseCases.fetchTokenUseCase.invoke().onFailure {
+                showMessageEvent(it.localizedMessage ?: "")
+                _tokenStatus.emit(TokenStatus.TOKEN_FETCH_FAILED)
+            }.onSuccess {
+                _tokenStatus.emit(TokenStatus.TOKEN_FETCH_SUCCESS)
+                getPlanetsData()
+                getVehiclesData()
+            }
         }
     }
 
@@ -128,7 +141,7 @@ class FalconeSelectionViewModel @Inject constructor(
                 _planetsData.postValue(it)
             }.onFailure {
                 sendUILoaderEvent()
-                sendUiEvent(FalconeScreenUIEvent.showTost(it.localizedMessage ?: ""))
+                showMessageEvent(it.localizedMessage ?: "")
             }
         }
     }
@@ -142,13 +155,17 @@ class FalconeSelectionViewModel @Inject constructor(
                 _vehiclesData.postValue(it)
             }.onFailure {
                 sendUILoaderEvent()
-                sendUiEvent(FalconeScreenUIEvent.showTost(it.localizedMessage ?: ""))
+                showMessageEvent(it.localizedMessage ?: "")
             }
         }
     }
 
     private fun sendUILoaderEvent(show: Boolean = false) {
         sendUiEvent(FalconeScreenUIEvent.progressBarStatus(show))
+    }
+
+    private fun showMessageEvent(content: String?) {
+        sendUiEvent(FalconeScreenUIEvent.showTost(content))
     }
 
     fun populatePlanetAndVehicleIndexs() {

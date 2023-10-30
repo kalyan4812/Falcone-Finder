@@ -10,9 +10,14 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.example.falcone_finder.R
+import com.example.falcone_finder.business.domain.utils.TokenStatus
+import com.example.falcone_finder.databinding.ErrorPlaceholderLayoutBinding
+import com.example.falcone_finder.databinding.FragmentFalconeFinderBinding
 import com.example.falcone_finder.databinding.FragmentFalconeSelectionBinding
 import com.example.falcone_finder.framework.utils.collectLifecycleAwareChannelFlow
 import com.example.falcone_finder.framework.utils.BaseFragment
+import com.example.falcone_finder.framework.utils.autoCleared
+import com.example.falcone_finder.framework.utils.collectLifecycleAwareFlow
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,7 +28,7 @@ class FalconeSelectionFragment :
     @Inject
     lateinit var requestManager: RequestManager
 
-
+    private var errorViewStub: ErrorPlaceholderLayoutBinding by autoCleared()
     override fun getViewBinding(): FragmentFalconeSelectionBinding =
         FragmentFalconeSelectionBinding.inflate(layoutInflater)
 
@@ -84,7 +89,6 @@ class FalconeSelectionFragment :
 
                 is FalconeScreenUIEvent.showTost -> {
                     Toast.makeText(context, event.content, Toast.LENGTH_SHORT).show()
-                    binding.forwardButton.isVisible = false
                 }
             }
         }
@@ -102,12 +106,28 @@ class FalconeSelectionFragment :
     private fun observeData() {
         viewModel.planetsData.observe(viewLifecycleOwner) { response ->
             setUpSpinnerView(response.map { it.name })
+            binding.forwardButton.isVisible = true
         }
         viewModel.vehiclesData.observe(viewLifecycleOwner) { response ->
             setRadioGroupChangeListener(response.map { it.name })
+            binding.forwardButton.isVisible = true
+        }
+        collectLifecycleAwareFlow(viewModel.tokenStatus) { response ->
+            if (response == TokenStatus.TOKEN_FETCH_FAILED) {
+                binding.group.isVisible = false
+                binding.errorPlaceholderStub.setOnInflateListener { _, view ->
+                    errorViewStub = ErrorPlaceholderLayoutBinding.bind(view)
+                }
+                binding.errorPlaceholderStub.inflate()
+            } else if (response == TokenStatus.TOKEN_FETCH_SUCCESS) {
+                binding.group.isVisible = true
+                binding.prevButton.isVisible = false
+                binding.forwardButton.isVisible = false
+                binding.errorPlaceholderStub.isVisible=false
+            }
         }
         viewModel.selectionData.observe(viewLifecycleOwner) { triple ->
-            val (spinnerIndex, radioGroupIndex,destinationIndex) = triple
+            val (spinnerIndex, radioGroupIndex, destinationIndex) = triple
             resetPlanetSpinnerAndVehicleGroup(spinnerIndex, radioGroupIndex)
             loadImage(spinnerIndex + 1, radioGroupIndex + 1)
             binding.planetHeading.text =

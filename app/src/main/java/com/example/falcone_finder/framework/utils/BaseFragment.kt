@@ -15,7 +15,7 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> :
     Fragment() {
 
 
-    protected lateinit var binding: VB
+    protected  var binding: VB by autoCleared()
     protected lateinit var viewModel: VM
 
     abstract fun getViewBinding(): VB

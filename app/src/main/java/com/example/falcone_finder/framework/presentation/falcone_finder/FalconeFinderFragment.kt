@@ -24,13 +24,15 @@ class FalconeFinderFragment : BaseFragment<FalconeFinderViewModel, FragmentFalco
         observeData()
         setUpListeners()
         setupOnBackPressedCallback {
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.no_anim)
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.no_anim).setPopUpTo(
+                R.id.falconeSelectionFragment, true
+            )
                 .setExitAnim(R.anim.no_anim)
                 .setPopEnterAnim(R.anim.no_anim)
                 .setPopExitAnim(R.anim.no_anim).build()
             findNavController().navigate(
                 R.id.action_falconeFinderFragment_to_falconeSelectionFragment,
-                null,animationOptions
+                null, animationOptions
             )
         }
     }
