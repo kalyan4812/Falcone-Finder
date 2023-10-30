@@ -18,9 +18,9 @@
         <tr>
           <td><img src = "https://github.com/kalyan4812/Falcone-Finder/assets/68738102/abda9715-dc58-4d72-8ede-f22b096f39c3" ></td>
           <td><img src = "https://github.com/kalyan4812/Falcone-Finder/assets/68738102/ea31c3df-58e4-4781-b4a4-7874c6e7438d" ></td>
+           <td><img src = "https://github.com/kalyan4812/Falcone-Finder/assets/68738102/58140332-f4a7-4f99-8f7e-a06b6a823c8e" ></td>
         </tr>
 </table>
-
 
 
 ## Maintainers and Developers
