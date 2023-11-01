@@ -49,9 +49,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // dagger hilt
     implementation("com.google.dagger:hilt-android:2.48")
@@ -76,6 +73,26 @@ dependencies {
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+
+
+    // JUnit for unit testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    // ui testing
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // Mockito for mocking objects
+    testImplementation ("org.mockito:mockito-core:4.0.0")
+
+    // Truth assertion library for more readable assertions
+    testImplementation("com.google.truth:truth:1.1.3")
+
+    // MockK for mocking objects (alternative to Mockito)
+    testImplementation("io.mockk:mockk:1.12.2")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }
 kapt {
     correctErrorTypes = true
