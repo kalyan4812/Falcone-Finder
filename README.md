@@ -23,9 +23,9 @@ The following libraries and tools were used in this Android project:
 
 - [Navigation Component](https://developer.android.com/guide/navigation): A library for handling navigation and UI-related components.
 
-- Use Cases: A software architectural pattern used to separate the application's business logic from the presentation layer, resulting in a cleaner and more maintainable codebase.
+- [Use Cases](): A software architectural pattern used to separate the application's business logic from the presentation layer, resulting in a cleaner and more maintainable codebase.
 
-- MVI (Model-View-Intent) Pattern: A modern architectural pattern that enforces a unidirectional flow of data and events in the app, facilitating a more predictable and testable application state.
+- [MVI]() (Model-View-Intent) Pattern: A modern architectural pattern that enforces a unidirectional flow of data and events in the app, facilitating a more predictable and testable application state.
 
 - Clean Architecture: A software design approach that separates an application into layers with clear responsibilities, promoting modularity, maintainability, and testability.
 
