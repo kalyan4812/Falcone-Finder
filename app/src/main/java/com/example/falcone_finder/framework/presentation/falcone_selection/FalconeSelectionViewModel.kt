@@ -54,7 +54,7 @@ class FalconeSelectionViewModel @Inject constructor(
         sendUiEvent(FalconeScreenUIEvent.refreshUI(1, null))
     }
 
-
+    // to listen events from ui layer ,and tell them what to do.
     fun onEventRecieved(event: FalconeSelectionScreenEvent) {
         when (event) {
             is FalconeSelectionScreenEvent.onNext -> {
@@ -119,6 +119,7 @@ class FalconeSelectionViewModel @Inject constructor(
         }
     }
 
+    // getting the token.
      fun initToken() {
          viewModelScope.launch(Dispatchers.IO) {
              falconeSelectionUseCases.fetchTokenUseCase.invoke().onFailure {
@@ -168,6 +169,7 @@ class FalconeSelectionViewModel @Inject constructor(
         sendUiEvent(FalconeScreenUIEvent.showTost(content))
     }
 
+    // refresh the selections on ui.
     fun populatePlanetAndVehicleIndexs() {
         _selectionData.postValue(
             Triple(
