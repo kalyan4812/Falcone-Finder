@@ -25,9 +25,7 @@ The following libraries and tools were used in this Android project:
 
 - [Use Cases](): A software architectural pattern used to separate the application's business logic from the presentation layer, resulting in a cleaner and more maintainable codebase.
 
-- [MVI]() (Model-View-Intent) Pattern: A modern architectural pattern that enforces a unidirectional flow of data and events in the app, facilitating a more predictable and testable application state.
-
-- Clean Architecture: A software design approach that separates an application into layers with clear responsibilities, promoting modularity, maintainability, and testability.
+- [Clean Architecture](): A software design approach that separates an application into layers with clear responsibilities, promoting modularity, maintainability, and testability.
 
 - [Unit Testing](https://developer.android.com/training/testing/local-tests) (View model ,repository, use cases)
 
