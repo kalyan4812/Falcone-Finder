@@ -2,7 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.FalconeFinder" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-         <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
     <style name="Theme.FalconeFinder" parent="Base.Theme.FalconeFinder" />

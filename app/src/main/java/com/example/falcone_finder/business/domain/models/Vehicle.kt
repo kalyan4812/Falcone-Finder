@@ -2,7 +2,7 @@ package com.example.falcone_finder.business.domain.models
 
 import android.os.Parcelable
 import androidx.annotation.Keep
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Keep

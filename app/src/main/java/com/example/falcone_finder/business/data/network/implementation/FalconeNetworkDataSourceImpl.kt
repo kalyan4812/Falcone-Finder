@@ -8,21 +8,19 @@ import com.example.falcone_finder.business.domain.model.FindApiRequest
 import com.example.falcone_finder.business.domain.model.FindApiResponse
 import com.example.falcone_finder.business.domain.model.TokenApiResponse
 import com.example.falcone_finder.business.domain.model.VehiclesApiResponse
-import com.example.falcone_finder.business.domain.models.FindResponse
 import com.example.falcone_finder.framework.datasource.remote.FalconeApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FalconeNetworkDataSourceImpl @Inject constructor(
-    private val falconeApiService: FalconeApiService, private val sharedPrefHelper: SharedPrefHelper
+    private val falconeApiService: FalconeApiService,
+    private val sharedPrefHelper: SharedPrefHelper
 ) : FalconeNetworkDataSource {
 
     override suspend fun getToken(): Result<TokenApiResponse> {
         return safeApiCall {
-            falconeApiService.getToken().also {
-                sharedPrefHelper.token = it.token
-            }
+            falconeApiService.getToken()
         }
     }
 
@@ -50,6 +48,4 @@ class FalconeNetworkDataSourceImpl @Inject constructor(
             )
         }
     }
-
 }
-
