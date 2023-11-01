@@ -29,7 +29,7 @@ The following libraries and tools were used in this Android project:
 
 - Clean Architecture: A software design approach that separates an application into layers with clear responsibilities, promoting modularity, maintainability, and testability.
 
-- [Unit Testing](https://developer.android.com/training/testing/local-tests) ( View model ,repository, use cases)
+- [Unit Testing](https://developer.android.com/training/testing/local-tests) (View model ,repository, use cases)
 
 This project follows clean architecture principles to maintain a separation of concerns and promote code maintainability. The MVI pattern ensures a clear and predictable flow of data in the application, while Dagger Hilt simplifies dependency injection for modularity and testability.
 
