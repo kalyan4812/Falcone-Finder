@@ -122,6 +122,7 @@ class FalconeSelectionFragment :
                 binding.errorPlaceholderStub.setOnInflateListener { _, view ->
                     errorViewStub = ErrorPlaceholderLayoutBinding.bind(view)
                 }
+                binding.progressBar.isVisible = false
                 binding.errorPlaceholderStub.inflate()
             } else if (response == TokenStatus.TOKEN_FETCH_SUCCESS) {
                 binding.group.isVisible = true
