@@ -123,7 +123,11 @@ class FalconeSelectionFragment :
                     errorViewStub = ErrorPlaceholderLayoutBinding.bind(view)
                 }
                 binding.progressBar.isVisible = false
-                binding.errorPlaceholderStub.inflate()
+                if (binding.errorPlaceholderStub.parent != null) {
+                    binding.errorPlaceholderStub.inflate()
+                } else {
+                    binding.errorPlaceholderStub.visibility = View.VISIBLE;
+                }
             } else if (response == TokenStatus.TOKEN_FETCH_SUCCESS) {
                 binding.group.isVisible = true
                 binding.prevButton.isVisible = false
